@@ -1,0 +1,6 @@
+Dictionary should be used to store possible chess moves. 
+Key-value pairs
+keys will be the the pieces like king-white, queen-white etc
+Initially the dictionary will have the initial starting positions of the pieces.
+and values will have the possible coordinates of the next possible moves.
+After every step the dictionary will be updated with the next possible moves.
