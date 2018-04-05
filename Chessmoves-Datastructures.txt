@@ -3,3 +3,5 @@ Key-value pairs
 keys will be the the pieces like king-white, queen-white etc
 and values will have the possible coordinates of the next possible moves.
 After every step the dictionary will be updated with the next possible moves.
+
+dic= {"KingWhite":[pm1,pm2, etc...], "KingBlack":[posmove1,posmov2, etc], ...... } 
