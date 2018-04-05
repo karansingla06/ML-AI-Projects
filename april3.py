@@ -25,22 +25,8 @@
 
 
 
-#Q3
 
-# =============================================================================
-# exp=input()
-# operand=[]
-# operator=[]
-# for i in exp:
-#     if i.isdigit():
-#         operand.append(i)
-#     elif i=="(":
-#         operator.append(i)
-#     else:
-#         operator.append(i)
-# print(operand,operator)  
-# 
-# =============================================================================
+#Q3
 
 # =============================================================================
 # 
@@ -83,5 +69,34 @@
 # exp=input()
 # postfx=infix_to_postfix(exp)
 # print(evaluate_postfix(postfx))
+# =============================================================================
+
+
+#Q4
+
+# =============================================================================
+# 
+# def binarySearch(alist, item):
+# 	    first = 0
+# 	    last = len(alist)-1
+# 	    found = False
+# 
+# 	    while first<=last and not found:
+# 	        midpoint = (first + last)//2
+# 	        if alist[midpoint] == item:
+# 	            found = True
+# 	        else:
+# 	            if item < alist[midpoint]:
+# 	                last = midpoint-1
+# 	            else:
+# 	                first = midpoint+1
+# 
+# 
+# new_list=[]
+# for x in range(5):
+#     new_list.append(input("enter the number"))
+# 
+# item= input("enter the number you want to search for")
+# binarySearch(new_list, item)
 # =============================================================================
 
