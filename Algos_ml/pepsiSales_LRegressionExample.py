@@ -5,7 +5,7 @@ import pandas as pd
 
 
 
-df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sales.xlsx", sheet_name='Sheet1')
+df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sales.xlsx", sheet_name='Data')
 
 
 # General way, plot scatter
@@ -19,68 +19,62 @@ df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sa
 
 
 
-# =============================================================================
-# week=df["Week"].values
-# 
-# 
-# #Scatter plots
-# plt.figure(figsize=(8,6))
-# p12k=df["PRICE 12PK"].values
-# plt.plot(week,p12k,marker="o")
-# plt.xlabel("Weeks")
-# plt.ylabel("PRICE 12PK")
-# plt.show()
-# 
-# 
-# plt.figure(figsize=(8,6))
-# p18k=df["PRICE 18PK"].values
-# plt.plot(week,p18k,marker="o")
-# plt.xlabel("Weeks")
-# plt.ylabel("PRICE 18PK")
-# plt.show()
-# 
-# 
-# plt.figure(figsize=(8,6))
-# p30k=df["PRICE 30PK"].values
-# plt.plot(week,p30k,marker="o")
-# plt.xlabel("Weeks")
-# plt.ylabel("PRICE 30PK")
-# plt.show()
-# 
-# 
-# plt.figure(figsize=(8,6))
-# c12k=df["CASES 12PK"].values
-# plt.plot(week,c12k,marker="o")
-# plt.xlabel("Weeks")
-# plt.ylabel("CASES 12PK")
-# plt.show()
-# 
-# 
-# plt.figure(figsize=(8,6))
-# c18k=df["CASES 18PK"].values
-# plt.plot(week,c18k,marker="o")
-# plt.xlabel("Weeks")
-# plt.ylabel("CASES 18PK")
-# plt.show()
-# 
-# 
-# plt.figure(figsize=(8,6))
-# c30k=df["CASES 30PK"].values
-# plt.plot(week,c30k,marker="o")
-# plt.xlabel("Weeks")
-# plt.ylabel("CASES 30PK")
-# plt.show()
-# 
-# 
-# 
-# =============================================================================
+week=df["Week"].values
+
+
+#Scatter plots
+plt.figure(figsize=(8,6))
+p12k=df["PRICE 12PK"].values
+plt.plot(week,p12k,marker="o")
+plt.xlabel("Weeks")
+plt.ylabel("PRICE 12PK")
+plt.show()
+
+
+
+plt.figure(figsize=(8,6))
+p18k=df["PRICE 18PK"].values
+plt.plot(week,p18k,marker="o")
+plt.xlabel("Weeks")
+plt.ylabel("PRICE 18PK")
+plt.show()
+
+
+plt.figure(figsize=(8,6))
+p30k=df["PRICE 30PK"].values
+plt.plot(week,p30k,marker="o")
+plt.xlabel("Weeks")
+plt.ylabel("PRICE 30PK")
+plt.show()
+
+
+plt.figure(figsize=(8,6))
+c12k=df["CASES 12PK"].values
+plt.plot(week,c12k,marker="o")
+plt.xlabel("Weeks")
+plt.ylabel("CASES 12PK")
+plt.show()
+
+
+plt.figure(figsize=(8,6))
+c18k=df["CASES 18PK"].values
+plt.plot(week,c18k,marker="o")
+plt.xlabel("Weeks")
+plt.ylabel("CASES 18PK")
+plt.show()
+
+
+plt.figure(figsize=(8,6))
+c30k=df["CASES 30PK"].values
+plt.plot(week,c30k,marker="o")
+plt.xlabel("Weeks")
+plt.ylabel("CASES 30PK")
+plt.show()
 
 
 
 
-
-
-# show two graohs in a single *************************
+# show two graphs in a single *************************
 
 # =============================================================================
 # plt.figure(figsize=(8,5))
@@ -91,8 +85,8 @@ df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sa
 # plt.plot(week,p12k,marker="o")                                                                  
 # plt.ylabel("PRICE 12PK")
 # plt.show()
+# 
 # =============================================================================
-
 
 
 # using sklearn
@@ -116,9 +110,9 @@ df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sa
 # =============================================================================
 
 
-#X = np.array(df.iloc[:, 0].values).reshape(-1,1)
-X = df.iloc[:, [0]].values
-y = df.iloc[:, [1]].values
+X = np.array(df.iloc[:, 1].values).reshape(-1,1)
+#X = df[["PRICE 12PK"]].values   #different ways to do
+y = df.iloc[:, [7]].values
 
 # =============================================================================
 # from sklearn.cross_validation import train_test_split
@@ -129,6 +123,9 @@ y = df.iloc[:, [1]].values
 from sklearn.linear_model import LinearRegression
 regressor = LinearRegression()
 regressor.fit(X, y)
+
+print(regressor.intercept_)
+print(regressor.coef_)
 
 # Predicting the Test set results
 y_pred = regressor.predict(X)
@@ -141,14 +138,48 @@ plt.xlabel('Price 12pk')
 plt.ylabel('Cases 12pk')
 plt.show()
 
-# Visualising the Test set results
-# =============================================================================
-# plt.scatter(X_test, y_test, color = 'red')
-# plt.plot(X_train, regressor.predict(X_train), color = 'blue')
-# plt.title('Price 12pk vs Cases 12pk (Test set)')
-# plt.xlabel('Price 12pk')
-# plt.ylabel('Cases 12pk')
-# plt.show()
-# =============================================================================
-print(regressor.intercept_)
-print(regressor.coef_)
+
+
+# between week and price 12pk
+week2=df[["Week"]].values
+reg2=LinearRegression()
+reg2.fit(week2,X)
+
+print(reg2.intercept_)
+print(reg2.coef_)
+
+p_pred=reg2.predict(100)
+print("100th week predicted value pf 12pk:-",p_pred[0])
+
+plt.scatter(week2, X, color = 'red')
+plt.plot(week2, reg2.predict(week2), color = 'blue')
+plt.title('week vs price 12pk (Training set)')
+plt.xlabel('week')
+plt.ylabel('price 12pk')
+plt.show()
+
+
+
+
+# between week and cases 12pk
+
+reg3=LinearRegression()
+reg3.fit(week2,y)
+
+print(reg3.intercept_)
+print(reg3.coef_)
+
+c_pred=reg3.predict(100)
+print("100th week predicted value pf cases 12pk:-",c_pred[0])
+
+plt.scatter(week2, y, color = 'red')
+plt.plot(week2, reg3.predict(week2), color = 'blue')
+plt.title('week vs cases 12pk (Training set)')
+plt.xlabel('week')
+plt.ylabel('cases 12pk')
+plt.show()
+
+
+
+
+
