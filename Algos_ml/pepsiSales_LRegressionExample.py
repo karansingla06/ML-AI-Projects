@@ -115,6 +115,8 @@ df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sa
 # df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 # =============================================================================
 
+
+#X = np.array(df.iloc[:, 0].values).reshape(-1,1)
 X = df.iloc[:, [0]].values
 y = df.iloc[:, [1]].values
 
