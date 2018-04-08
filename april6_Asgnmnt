@@ -1,0 +1,45 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+import datetime as dt
+
+df= pd.read_excel(r"C:\Users\karan\.spyder-py3\ca_result.xlsx")
+
+#group 1
+plt.plot(df.iloc[1:,0],df.iloc[1:,3])
+plt.show()
+
+#group2
+plt.plot(df.iloc[1:,0],df.iloc[1:,6])
+plt.show()
+
+# both groups
+plt.plot(df.iloc[1:,0],df.iloc[1:,9])
+plt.show()
+
+df.columns = df.columns.str.strip()
+
+# Regression betwn year and group 1 appeared
+df['Year'] = pd.to_datetime(df['Year'])
+df['Year']=df['Year'].map(dt.datetime.toordinal)
+
+
+yr=np.array(df.iloc[1:,0].values).reshape(-1,1)
+g1_pass=df.iloc[1:,3]
+
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(yr, g1_pass)
+
+print(regressor.coef_,regressor.intercept_)
+
+g1_app__pred=regressor.predict(yr)
+
+plt.scatter(yr,g1_pass,color='red')
+plt.plot(yr,regressor.predict(yr),color="blue")
+
+plt.title('Year vs Pass %')
+plt.xlabel('Year')
+plt.ylabel('Pass %')
+plt.show()
