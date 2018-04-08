@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 
 import datetime as dt
 
+
+#--------------------question 2-----------------------
+
 df= pd.read_excel(r"C:\Users\karan\.spyder-py3\ca_result.xlsx")
 
 #group 1
@@ -42,4 +45,25 @@ plt.plot(yr,regressor.predict(yr),color="blue")
 plt.title('Year vs Pass %')
 plt.xlabel('Year')
 plt.ylabel('Pass %')
+plt.show()
+
+
+
+
+
+#--------------------question 4--------------------
+
+temperature=np.array([14.2,16.3,11.9,15.2,18.5,22.1,19.4,25.1]).reshape(-1,1)
+ics=np.array([215,325,185,332,406,522,412,614])
+
+from sklearn.linear_model import LinearRegression
+regressor4 = LinearRegression()
+regressor4.fit(temperature, ics)
+
+plt.scatter(temperature,ics,color='red')
+plt.plot(temperature,regressor4.predict(temperature),color="blue")
+
+plt.title('temperature vs Ice cream sales')
+plt.xlabel('temperature')
+plt.ylabel('ice cream sales')
 plt.show()
