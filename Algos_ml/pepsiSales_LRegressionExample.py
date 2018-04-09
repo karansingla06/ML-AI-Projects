@@ -167,8 +167,6 @@ plt.title('Price 12pk vs Cases 12pk sales')
 plt.xlabel('Price 12pk')
 plt.ylabel('Cases 12pk sales')
 plt.show()
-print(regressor.predict(12))
-
 
 
 # between week and price 12pk
@@ -205,4 +203,46 @@ print("in 100th weeek then predicted value of cases sales 12pk:-",c_pred[0])
 #print(reg3.intercept_)
 #print(reg3.coef_)
 
+
+
+
+
+
+
+########## Week 27 - 52
+
+
+df2=df.iloc[26:,:12]
+wk2=np.array(df2.iloc[:,0].values).reshape(-1,1)
+pr2=np.array(df2.iloc[:,1].values).reshape(-1,1)
+
+from sklearn.linear_model import LinearRegression
+reg5 = LinearRegression()
+reg5.fit(wk2, pr2)
+
+print(reg5.intercept_)
+print(reg5.coef_)
+print("y=",reg5.coef_[0][0],"x+",reg5.intercept_[0])
+
+
+plt.scatter(wk2,pr2,color="r")
+plt.plot(wk2,reg5.predict(wk2),color="b")
+plt.xlabel("week 27-52")
+plt.ylabel("Price 12PK")
+plt.title("Week vs Price 12pk")
+plt.show()
+
+
+
+
+case2=df2.iloc[:,7]
+reg6 = LinearRegression()
+reg6.fit(pr2, case2)
+
+plt.scatter(pr2,case2,color="r")
+plt.plot(pr2,reg6.predict(pr2),color="b")
+plt.xlabel("Price 12 PK")
+plt.ylabel("Case 12PK")
+plt.title("Price 12pk vs Case 12pk")
+plt.show()
 
