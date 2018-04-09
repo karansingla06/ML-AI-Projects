@@ -21,18 +21,24 @@ df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sa
 
 week=df["Week"].values
 
+#plt.matshow(df.corr())
+
 
 #Scatter plots
 plt.figure(figsize=(8,6))
+plt.title('Weeks VS Price 12pk')
 p12k=df["PRICE 12PK"].values
 plt.plot(week,p12k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("PRICE 12PK")
 plt.show()
-print("Correlation-",np.corrcoef(week,p12k))
+print("Correlation- \n",np.corrcoef(week,p12k))
+
+
 
 
 plt.figure(figsize=(8,6))
+plt.title('Week vs Cases 12pk sales')
 c12k=df["CASES 12PK"].values
 plt.plot(week,c12k,marker="o")
 plt.xlabel("Weeks")
@@ -42,6 +48,7 @@ print("Correlation- \n",np.corrcoef(week,c12k))
 
 
 plt.figure(figsize=(8,6))
+plt.title('Week vs Price 18pk')
 p18k=df["PRICE 18PK"].values
 plt.plot(week,p18k,marker="o")
 plt.xlabel("Weeks")
@@ -53,6 +60,7 @@ print("Correlation- \n",np.corrcoef(week,p18k))
 
 
 plt.figure(figsize=(8,6))
+plt.title('Week vs Cases 18pk sales')
 c18k=df["CASES 18PK"].values
 plt.plot(week,c18k,marker="o")
 plt.xlabel("Weeks")
@@ -140,6 +148,7 @@ print(regressor.coef_)
 y_pred = regressor.predict(X)
 
 # Visualising the Training set results
+plt.figure(figsize=(8,6))
 plt.scatter(X, y, color = 'red')
 plt.plot(X, regressor.predict(X), color = 'blue')
 plt.title('Price 12pk vs Cases 12pk sales')
@@ -153,6 +162,7 @@ week2=df[["Week"]].values
 reg2=LinearRegression()
 reg2.fit(week2,X)
 
+plt.figure(figsize=(8,6))
 plt.scatter(week2, X, color = 'red')
 plt.plot(week2, reg2.predict(week2), color = 'blue')
 plt.title('week vs price 12pk')
@@ -169,6 +179,7 @@ print(reg2.coef_)
 reg3=LinearRegression()
 reg3.fit(week2,y)
 
+plt.figure(figsize=(8,6))
 plt.scatter(week2, y, color = 'red')
 plt.plot(week2, reg3.predict(week2), color = 'blue')
 plt.title('week vs cases 12pk sales)')
