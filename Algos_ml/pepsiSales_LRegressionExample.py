@@ -2,11 +2,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 
 
 df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sales.xlsx", sheet_name='Data')
-
+df=df.iloc[:,:12]
 
 # General way, plot scatter
 # =============================================================================
@@ -21,56 +22,57 @@ df = pd.read_excel(r"C:\Users\user\Downloads\Regression_example--weekly_pepsi-sa
 
 week=df["Week"].values
 
-#plt.matshow(df.corr())
 
 
 #Scatter plots
-plt.figure(figsize=(8,6))
-plt.title('Weeks VS Price 12pk')
+
 p12k=df["PRICE 12PK"].values
 plt.plot(week,p12k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("PRICE 12PK")
+plt.title('Weeks VS Price 12pk')
 plt.show()
 print("Correlation- \n",np.corrcoef(week,p12k))
 
 
 
 
-plt.figure(figsize=(8,6))
-plt.title('Week vs Cases 12pk sales')
+
+
 c12k=df["CASES 12PK"].values
 plt.plot(week,c12k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("CASES 12PK")
+plt.title('Week vs Cases 12pk sales')
 plt.show()
 print("Correlation- \n",np.corrcoef(week,c12k))
 
 
-plt.figure(figsize=(8,6))
-plt.title('Week vs Price 18pk')
+
 p18k=df["PRICE 18PK"].values
 plt.plot(week,p18k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("PRICE 18PK")
+plt.title('Week vs Price 18pk')
 plt.show()
 print("Correlation- \n",np.corrcoef(week,p18k))
 
 
 
 
-plt.figure(figsize=(8,6))
-plt.title('Week vs Cases 18pk sales')
+
+
 c18k=df["CASES 18PK"].values
 plt.plot(week,c18k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("CASES 18PK")
+plt.title('Week vs Cases 18pk sales')
 plt.show()
 print("Correlation-\n",np.corrcoef(week,p18k))
 
 
 
-plt.figure(figsize=(8,6))
+
 p30k=df["PRICE 30PK"].values
 plt.plot(week,p30k,marker="o")
 plt.xlabel("Weeks")
@@ -80,7 +82,7 @@ print("Correlation-\n",np.corrcoef(week,p30k))
 
 
 
-plt.figure(figsize=(8,6))
+
 c30k=df["CASES 30PK"].values
 plt.plot(week,c30k,marker="o")
 plt.xlabel("Weeks")
@@ -89,6 +91,16 @@ plt.show()
 print("Correlation-\n",np.corrcoef(week,c30k))
 
 
+
+
+
+#Correlation Representation`
+
+corr=df.corr()
+f, ax = plt.subplots(figsize=(12, 9))
+sns.heatmap(corr, vmax=.8, square=True)
+plt.suptitle('Beer Sales Correlation Heat map')
+plt.show()
 
 
 # show two graphs in a single *************************
@@ -141,8 +153,8 @@ from sklearn.linear_model import LinearRegression
 regressor = LinearRegression()
 regressor.fit(X, y)
 
-print(regressor.intercept_)
-print(regressor.coef_)
+#print(regressor.intercept_)
+#print(regressor.coef_)
 
 # Predicting the Test set results
 y_pred = regressor.predict(X)
@@ -155,6 +167,8 @@ plt.title('Price 12pk vs Cases 12pk sales')
 plt.xlabel('Price 12pk')
 plt.ylabel('Cases 12pk sales')
 plt.show()
+print(regressor.predict(12))
+
 
 
 # between week and price 12pk
@@ -171,8 +185,8 @@ plt.ylabel('price 12pk')
 plt.show()
 p_pred=reg2.predict(100)
 print("100th week predicted value pf 12pk:-",p_pred)
-print(reg2.intercept_)
-print(reg2.coef_)
+#print(reg2.intercept_)
+#print(reg2.coef_)
 
 # between week and cases 12pk
 
@@ -188,8 +202,7 @@ plt.ylabel('cases 12pk sales')
 plt.show()
 c_pred=reg3.predict(100)
 print("in 100th weeek then predicted value of cases sales 12pk:-",c_pred[0])
-print(reg3.intercept_)
-print(reg3.coef_)
-
+#print(reg3.intercept_)
+#print(reg3.coef_)
 
 
