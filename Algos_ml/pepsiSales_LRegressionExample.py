@@ -29,6 +29,8 @@ plt.plot(week,p12k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("PRICE 12PK")
 plt.show()
+print("Correlation-",np.corrcoef(week,p12k))
+
 
 plt.figure(figsize=(8,6))
 c12k=df["CASES 12PK"].values
@@ -36,6 +38,7 @@ plt.plot(week,c12k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("CASES 12PK")
 plt.show()
+print("Correlation- \n",np.corrcoef(week,c12k))
 
 
 plt.figure(figsize=(8,6))
@@ -44,7 +47,7 @@ plt.plot(week,p18k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("PRICE 18PK")
 plt.show()
-
+print("Correlation- \n",np.corrcoef(week,p18k))
 
 
 
@@ -55,6 +58,7 @@ plt.plot(week,c18k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("CASES 18PK")
 plt.show()
+print("Correlation-\n",np.corrcoef(week,p18k))
 
 
 
@@ -64,6 +68,7 @@ plt.plot(week,p30k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("PRICE 30PK")
 plt.show()
+print("Correlation-\n",np.corrcoef(week,p30k))
 
 
 
@@ -73,6 +78,7 @@ plt.plot(week,c30k,marker="o")
 plt.xlabel("Weeks")
 plt.ylabel("CASES 30PK")
 plt.show()
+print("Correlation-\n",np.corrcoef(week,c30k))
 
 
 
