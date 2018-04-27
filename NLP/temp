@@ -1,0 +1,32 @@
+
+from tika import parser
+from bs4 import BeautifulSoup
+
+parsed = parser.from_file('C:/Users/user/Downloads/Anthem.docx', xmlContent=True)
+user_input=input("Enter your query:\n")
+
+soup = BeautifulSoup(parsed['content'], 'html.parser')
+
+all_text=soup.body
+
+
+tables = soup.find_all('table')
+
+table1=tables[0]
+
+
+from nltk.tokenize import sent_tokenize,word_tokenize
+from nltk.corpus import stopwords
+from string import punctuation
+
+sents = sent_tokenize(user_input)
+word_sent = word_tokenize(user_input.lower())
+
+_stopwords = set(stopwords.words('english') + list(punctuation))
+word_sent=[word for word in word_sent if word not in _stopwords]
+
+
+all_h1=soup.find_all('h1')
+
+
+soup.h1.findAllNext('h1')
