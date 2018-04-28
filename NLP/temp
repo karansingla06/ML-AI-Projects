@@ -1,23 +1,27 @@
-
-from tika import parser
+import mammoth
 from bs4 import BeautifulSoup
+with open(r"C:\Users\user\Downloads\Anthem.docx", "rb") as docx_file:
+    result = mammoth.convert_to_html(docx_file)
+    html = result.value # The generated HTML
+    messages = result.messages # Any messages, such as warnings during conversion
+f = open(r"C:\Users\user\Downloads\Anthem.html","w")
+f.write(html)
 
-parsed = parser.from_file('C:/Users/user/Downloads/Anthem.docx', xmlContent=True)
-user_input=input("Enter your query:\n")
+soup = BeautifulSoup(html,'html.parser')
 
-soup = BeautifulSoup(parsed['content'], 'html.parser')
+print(soup.prettify())
 
 all_text=soup.body
 
-
 tables = soup.find_all('table')
-
 table1=tables[0]
 
 
 from nltk.tokenize import sent_tokenize,word_tokenize
 from nltk.corpus import stopwords
 from string import punctuation
+
+user_input=input("please enter your query:\n")
 
 sents = sent_tokenize(user_input)
 word_sent = word_tokenize(user_input.lower())
@@ -28,5 +32,3 @@ word_sent=[word for word in word_sent if word not in _stopwords]
 
 all_h1=soup.find_all('h1')
 
-
-soup.h1.findAllNext('h1')
