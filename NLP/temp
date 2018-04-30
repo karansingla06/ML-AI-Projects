@@ -1,27 +1,38 @@
-import mammoth
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Apr 30 14:55:19 2018
+
+@author: user
+"""
+
+#!/usr/bin/env python
+import tika
+from tika import parser
+parsed = parser.from_file(r'C:\Users\user\Downloads\Anthem1.docx', xmlContent=True)
+
 from bs4 import BeautifulSoup
-with open(r"C:\Users\user\Downloads\Anthem.docx", "rb") as docx_file:
-    result = mammoth.convert_to_html(docx_file)
-    html = result.value # The generated HTML
-    messages = result.messages # Any messages, such as warnings during conversion
-f = open(r"C:\Users\user\Downloads\Anthem.html","w")
-f.write(html)
+# =============================================================================
+# with open(r"C:\Users\user\Downloads\Anthem1.docx", "rb") as docx_file:
+#     result = mammoth.convert_to_html(docx_file)
+#     html = result.value # The generated HTML
+#     messages = result.messages # Any messages, such as warnings during conversion
+# f = open(r"C:\Users\user\Downloads\Anthem1.html","w")
+# f.write(html)
+# =============================================================================
 
-soup = BeautifulSoup(html,'html.parser')
-
-print(soup.prettify())
+soup = BeautifulSoup(parsed["content"],'html.parser')
 
 all_text=soup.body
 
 tables = soup.find_all('table')
 table1=tables[0]
 
-
+import nltk
 from nltk.tokenize import sent_tokenize,word_tokenize
 from nltk.corpus import stopwords
 from string import punctuation
 
-user_input=input("please enter your query:\n")
+user_input=[input("please enter your query:\n")]
 
 sents = sent_tokenize(user_input)
 word_sent = word_tokenize(user_input.lower())
@@ -30,5 +41,37 @@ _stopwords = set(stopwords.words('english') + list(punctuation))
 word_sent=[word for word in word_sent if word not in _stopwords]
 
 
+for item in word_sent[2:4]:
+        tokenized = nltk.word_tokenize(item)
+        tagged = nltk.pos_tag(tokenized)
+        print(tagged)
+
+
+
 all_h1=soup.find_all('h1')
 
+d_ms={}
+for item in all_h1:
+    first=item
+    second=first.find_next('h1')
+    temp=""
+    
+    while first.findNext()!=second:
+        temp+= str(first.findNext().text)
+        first=first.findNext()
+    d_ms[str(item.text)]=temp
+
+for item,value in d_ms.items():
+    print(item,"\n",value,'-----------------','\n')    
+    
+
+
+    
+
+
+
+    
+    
+    
+
+    
