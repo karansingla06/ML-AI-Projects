@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Apr 30 14:55:19 2018
-
-@author: user
+@author: karan
 """
 
 #!/usr/bin/env python
@@ -32,21 +29,23 @@ from nltk.tokenize import sent_tokenize,word_tokenize
 from nltk.corpus import stopwords
 from string import punctuation
 
-user_input=[input("please enter your query:\n")]
+user_input=input("please enter your query:\n")
 
 sents = sent_tokenize(user_input)
 word_sent = word_tokenize(user_input.lower())
 
 _stopwords = set(stopwords.words('english') + list(punctuation))
-word_sent=[word for word in word_sent if word not in _stopwords]
+user_input_words=[word for word in word_sent if word not in _stopwords]
 
 
-for item in word_sent[2:4]:
-        tokenized = nltk.word_tokenize(item)
-        tagged = nltk.pos_tag(tokenized)
-        print(tagged)
-
-
+# =============================================================================
+# for item in word_sent[2:4]:
+#         tokenized = nltk.word_tokenize(item)
+#         tagged = nltk.pos_tag(tokenized)
+#         print(tagged)
+# 
+# 
+# =============================================================================
 
 all_h1=soup.find_all('h1')
 
@@ -66,12 +65,16 @@ for item,value in d_ms.items():
     
 
 
+d_kwds={}
+
+for key,val in d_ms.items():
+    sents = sent_tokenize(val)
+    word_sent = word_tokenize(val.lower())
+    _stopwords = set(stopwords.words('english') + list(punctuation))
+    section_words=[word for word in word_sent if word not in _stopwords]
+    d_kwds[key]=section_words
     
 
-
-
-    
-    
     
 
     
