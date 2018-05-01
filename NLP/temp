@@ -2,24 +2,30 @@
 @author: karan
 """
 
-#!/usr/bin/env python
-import tika
-from tika import parser
-parsed = parser.from_file(r'C:\Users\user\Downloads\Anthem1.docx', xmlContent=True)
+# =============================================================================
+# import tika
+# from tika import parser
+# parsed = parser.from_file(r'C:\Users\user\Downloads\Anthem1.docx', xmlContent=True)
+# =============================================================================
+
+import mammoth
+with open(r"C:\Users\karan\Downloads\Anthem_Bronze_Pathway.docx", "rb") as docx_file:
+    result = mammoth.convert_to_html(docx_file)
+    html = result.value # The generated HTML
+    messages = result.messages # Any messages, such as warnings during conversion
+f = open(r"C:\Users\karan\Downloads\Anthem_Bronze_Pathway.html","w")
+f.write(html)
 
 from bs4 import BeautifulSoup
-# =============================================================================
-# with open(r"C:\Users\user\Downloads\Anthem1.docx", "rb") as docx_file:
-#     result = mammoth.convert_to_html(docx_file)
-#     html = result.value # The generated HTML
-#     messages = result.messages # Any messages, such as warnings during conversion
-# f = open(r"C:\Users\user\Downloads\Anthem1.html","w")
-# f.write(html)
-# =============================================================================
+soup = BeautifulSoup(html,'html.parser')
+#soup.prettify()
 
-soup = BeautifulSoup(parsed["content"],'html.parser')
+blacklist = ["img" ]
+for tag in soup.findAll():
+        if tag.name.lower() in blacklist:
+            # blacklisted tags are removed in their entirety
+            tag.extract()
 
-all_text=soup.body
 
 tables = soup.find_all('table')
 table1=tables[0]
@@ -56,7 +62,7 @@ for item in all_h1:
     temp=""
     
     while first.findNext()!=second:
-        temp+= str(first.findNext().text)
+        temp+= str(first.findNext().text)+" "
         first=first.findNext()
     d_ms[str(item.text)]=temp
 
@@ -72,9 +78,15 @@ for key,val in d_ms.items():
     word_sent = word_tokenize(val.lower())
     _stopwords = set(stopwords.words('english') + list(punctuation))
     section_words=[word for word in word_sent if word not in _stopwords]
-    d_kwds[key]=section_words
+    d_kwds[key]=set(section_words)
     
 
-    
+from nltk.stem.snowball import SnowballStemmer
+stemmer = SnowballStemmer("english")
 
+d_stem={}
+
+for key,val in d_kwds.items():
+    singles = [stemmer.stem(i) for i in val]
+    d_stem[key]=set(singles)
     
