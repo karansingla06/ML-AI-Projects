@@ -27,13 +27,15 @@ for tag in soup.findAll():
             tag.extract()
 
 
-tables = soup.find_all('table')
-table1=tables[0]
 
 import nltk
 from nltk.tokenize import sent_tokenize,word_tokenize
 from nltk.corpus import stopwords
 from string import punctuation
+
+from nltk.stem.snowball import SnowballStemmer
+stemmer = SnowballStemmer("english")
+
 
 user_input=input("please enter your query:\n")
 
@@ -42,6 +44,7 @@ word_sent = word_tokenize(user_input.lower())
 
 _stopwords = set(stopwords.words('english') + list(punctuation))
 user_input_words=[word for word in word_sent if word not in _stopwords]
+user_input_words=[stemmer.stem(i) for i in user_input_words]
 
 
 # =============================================================================
@@ -53,12 +56,12 @@ user_input_words=[word for word in word_sent if word not in _stopwords]
 # 
 # =============================================================================
 
-all_h1=soup.find_all('h1')
+all_h1=soup.find_all('h2')
 
 d_ms={}
 for item in all_h1:
     first=item
-    second=first.find_next('h1')
+    second=first.find_next('h2')
     temp=""
     
     while first.findNext()!=second:
@@ -72,7 +75,6 @@ for item,value in d_ms.items():
 
 
 d_kwds={}
-
 for key,val in d_ms.items():
     sents = sent_tokenize(val)
     word_sent = word_tokenize(val.lower())
@@ -80,13 +82,27 @@ for key,val in d_ms.items():
     section_words=[word for word in word_sent if word not in _stopwords]
     d_kwds[key]=set(section_words)
     
-
-from nltk.stem.snowball import SnowballStemmer
-stemmer = SnowballStemmer("english")
-
+    
 d_stem={}
-
 for key,val in d_kwds.items():
     singles = [stemmer.stem(i) for i in val]
     d_stem[key]=set(singles)
     
+    
+key_section={}
+for i in user_input_words:
+    temp=[]
+    for key,val in d_stem.items(): 
+        if i in val:
+            temp.append(key)
+    key_section[i]=temp
+        
+
+
+##### finding heading in tables
+tables = soup.find_all('table')
+table1=tables[0]
+
+
+
+
