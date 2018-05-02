@@ -26,6 +26,9 @@ for tag in soup.findAll():
 
 
 
+
+
+
 import nltk
 from nltk.tokenize import sent_tokenize,word_tokenize
 from nltk.corpus import stopwords
@@ -33,6 +36,9 @@ from string import punctuation
 import pandas as pd
 from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer("english")
+
+
+
 
 
 #user_input=input("please enter your query:\n")
@@ -54,12 +60,12 @@ user_input_words=[stemmer.stem(i) for i in user_input_words]
 # 
 # =============================================================================
 
-all_h1=soup.find_all('h2')
+all_h1=soup.find_all('h1')
 
 d_ms={}
 for item in all_h1:
     first=item
-    second=first.find_next('h2')
+    second=first.find_next('h1')
     temp=""
     
     while first.findNext()!=second:
@@ -67,19 +73,20 @@ for item in all_h1:
         first=first.findNext()
     d_ms[str(item.text)]=temp
 
-for item,value in d_ms.items():
-    print(item,"\n",value,'-----------------','\n')    
+#for item,value in d_ms.items():
+ #   print(item,"\n",value,'-----------------','\n')    
     
 
 
 d_kwds={}
 for key,val in d_ms.items():
-    sents = sent_tokenize(val)
-    word_sent = word_tokenize(val.lower())
-    _stopwords = set(stopwords.words('english') + list(punctuation))
-    section_words=[word for word in word_sent if word not in _stopwords]
-    d_kwds[key]=set(section_words)
-    
+    if val!=" ":
+        sents = sent_tokenize(val)
+        word_sent = word_tokenize(val.lower())
+        _stopwords = set(stopwords.words('english') + list(punctuation))
+        section_words=[word for word in word_sent if word not in _stopwords]
+        d_kwds[key]=set(section_words)
+        
     
 d_stem={}
 for key,val in d_kwds.items():
@@ -96,7 +103,51 @@ for i in user_input_words:
     key_section[i]=temp
         
 
+####$sjdnaskdsad''
+    
 
+all_sent=soup.text
+all_sent=all_sent.replace("\t"," ")
+all_sent=all_sent.replace(".",". ")
+
+sents = sent_tokenize(all_sent)
+sents=[i.replace('.',' ') for i in sents]
+word_sent = word_tokenize(all_sent.lower())
+_stopwords = set(stopwords.words('english') + list(punctuation)+['·','“','”'])
+bag=[word for word in word_sent if word not in _stopwords]
+bag_of_words=[stemmer.stem(i) for i in bag]
+bag_of_words=set(bag_of_words)
+bag_of_words2=list(bag_of_words)
+
+# =============================================================================
+# columns_main=[bag_of_words]
+# columns_main.append('Class')
+# =============================================================================
+
+maindf=pd.DataFrame(columns=bag_of_words2)
+maindf['Class']=[0]*len(d_stem.keys())
+temp_count=0
+d_mapping={}
+
+for i,j in d_stem.items():
+    #temp=[0]*len(bag_of_words)
+    m=temp_count
+
+    for k in j:
+        if k in maindf.columns.values:
+            maindf.loc[m,k]=1
+    d_mapping[m]=i
+    maindf.iloc[m,-1]=m
+    temp_count+=1    
+    
+
+maindf.fillna(0, inplace=True)
+
+
+
+
+    
+    
 
 ##### finding heading in tables
 tables = soup.find_all('table')
@@ -226,29 +277,32 @@ df2=df2.append(df3)
 #------------
 from sklearn import datasets
 from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import train_test_split
 
-import pandas as pd
 import numpy as np
 
+y = maindf['Class']
 
-
-from sklearn.preprocessing import LabelEncoder
-le = LabelEncoder()
-df3=df2.apply(le.fit_transform)
-
-x = df3.iloc[:,0].values.reshape(-1,1)
-y = df3.iloc[:,1].values.reshape(-1,1)
+x = maindf.drop('Class',axis=1)
 
 nb = GaussianNB()
+clf=LogisticRegression()
 
 nb.fit(x,y)
+#clf.fit(x,y)
 
-t=le.transform(["progress toward goal"])
-nb.predict(t.reshape(-1,1))
+userinp="wheelchair surgery therapy section benefits claims"
+user_kwds=[stemmer.stem(i) for i in list(userinp.split())]
 
+temp=[0]*(len(bag_of_words2))
+for i in user_kwds:
+    if i in bag_of_words2:
+        temp[bag_of_words2.index(i)]=1
 
+y_pred=nb.predict([temp])
 
+temp.count(1)
 
 #==============================================================================
 # print(user_blob.noun_phrases.count('wheelchair'))
