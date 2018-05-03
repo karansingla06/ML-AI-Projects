@@ -42,14 +42,16 @@ stemmer = SnowballStemmer("english")
 
 
 #user_input=input("please enter your query:\n")
-user_input="wheelchair"
-sents = sent_tokenize(user_input)
-word_sent = word_tokenize(user_input.lower())
-
-_stopwords = set(stopwords.words('english') + list(punctuation))
-user_input_words=[word for word in word_sent if word not in _stopwords]
-user_input_words=[stemmer.stem(i) for i in user_input_words]
-
+# =============================================================================
+# user_input="wheelchair"
+# sents = sent_tokenize(user_input)
+# word_sent = word_tokenize(user_input.lower())
+# 
+# _stopwords = set(stopwords.words('english') + list(punctuation))
+# user_input_words=[word for word in word_sent if word not in _stopwords]
+# user_input_words=[stemmer.stem(i) for i in user_input_words]
+# 
+# =============================================================================
 
 # =============================================================================
 # for item in word_sent[2:4]:
@@ -72,6 +74,7 @@ for item in all_h1:
         temp+= str(first.findNext().text)+" "
         first=first.findNext()
     if temp!=" Please see “Therapy Services” later in this section. " and temp!=' See “Therapy Services” later in this section. ':
+        temp.replace('.'," ")
         d_ms[str(item.text)]=temp
 
 #for item,value in d_ms.items():
@@ -107,7 +110,7 @@ for i in user_input_words:
 
 ####$sjdnaskdsad''
     
-import itertools 
+
 
 all_sent=soup.text
 all_sent=all_sent.replace("\t"," ")
@@ -119,7 +122,9 @@ for i,j in d_stem.items():
 new_bag=[]
 for list_word in bag_of_words2:
     for i in list_word:
-       new_bag.append(i) 
+        if i.isalpha():
+            new_bag.append(i) 
+new_bag=list(set(new_bag))
     
 # =============================================================================
 # sents = sent_tokenize(all_sent)
@@ -137,14 +142,14 @@ for list_word in bag_of_words2:
 # columns_main.append('Class')
 # =============================================================================
 
-maindf=pd.DataFrame(columns=list(set(new_bag)))
+maindf=pd.DataFrame(columns=new_bag)
 maindf['Class']=[0]*len(d_stem.keys())
 temp_count=0
 d_mapping={}
 
 for i,j in d_stem.items():
     #temp=[0]*len(bag_of_words)
-    m=temp_count
+    m=int(temp_count)
 
     for k in j:
         if k in maindf.columns.values:
@@ -156,11 +161,7 @@ for i,j in d_stem.items():
 
 maindf.fillna(0, inplace=True)
 
-
-
-
-    
-    
+       
 
 ##### finding heading in tables
 tables = soup.find_all('table')
@@ -288,10 +289,10 @@ df2=df2.append(df3)
 
 
 #------------
-from sklearn import datasets
-from sklearn.naive_bayes import GaussianNB
+
+#from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
-from sklearn.cross_validation import train_test_split
+#from sklearn.cross_validation import train_test_split
 from sklearn.svm import SVC
 
 import numpy as np
@@ -300,22 +301,22 @@ y = maindf['Class']
 
 x = maindf.drop('Class',axis=1)
 
-#nb = GaussianNB()
+nb = GaussianNB()
 clf=SVC()
 
-clf.fit(x,y)
+nb.fit(x,y)
 #clf.fit(x,y)
 
-userinp="unborn"
+userinp="am i eligible for wheelchair insurance"
 user_kwds=[stemmer.stem(i) for i in list(userinp.split())]
 
-temp=[0]*(len(list(set(new_bag))))
+temp=[0]*(len(new_bag))
 for i in user_kwds:
-    if i in list(set(new_bag)):
-        temp[list(set(new_bag)).index(i)]=1
-
-y_pred=clf.predict([temp])
-
+    if i in new_bag:
+        temp[new_bag.index(i)]=1
+        
+y_pre=nb.predict(ddff)
+print(y_pre)
 temp.index(1)
 
 #==============================================================================
