@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May  9 16:45:49 2018
-
-@author: user
+@author: karan
 """
 
 #-----------------------------------------------    
