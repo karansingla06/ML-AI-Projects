@@ -7,11 +7,11 @@
 # =============================================================================
 
 import mammoth
-with open(r"C:\Users\user\Downloads\Anthem.docx", "rb") as docx_file:
+with open(r"C:\Users\user\Desktop\Anthem1.docx", "rb") as docx_file:
     result = mammoth.convert_to_html(docx_file)
     html = result.value # The generated HTML
     messages = result.messages # Any messages, such as warnings during conversion
-f = open(r"C:\Users\user\Downloads\\Anthem.html","w")
+f = open(r"C:\Users\user\Desktop\Anthem1.html","w")
 f.write(html)
 
 from bs4 import BeautifulSoup
@@ -109,7 +109,7 @@ new_bag=list(set(new_bag))
     
     
 
-     
+
     
     
 #user_input=input("please enter your query:\n")
@@ -129,12 +129,43 @@ for i in user_input_words:
             temp.append(key)
     key_section[i]=set(temp)
 
+
 final_cmn_section= list(set.intersection(*map(set,key_section.values())))
+
+for i in final_cmn_section:
+    #print(i)
+    if len(d_ms[i].split())>250:
+        sents = sent_tokenize(d_ms[i])
+    #print(sents)
+        for sen in sents:
+            checklist=sen.lower().split()
+            checklist=[stemmer.stem(y) for y in checklist]
+        #print(checklist,"\n")
+            if all(x in checklist for x in user_input_words):
+                print(sen,"\n")
+    else:    
+        print(i,"\n",d_ms[i],"\n\n\n")
+
+#            
+print(final_cmn_section)
+
 
 
 trows = soup.find_all('tr')
 
-
+for i in final_cmn_section:
+    temp=i.split('and')
+    i=temp[0]
+    for tr in trows:    
+        if "See" in tr.text and i in tr.text:
+            continue
+            
+        elif i in tr.text:
+            section_tr=tr
+            print("\n\n---",section_tr)
+            
+            
+    
 ####$sjdnaskdsad''
     
 # =============================================================================
