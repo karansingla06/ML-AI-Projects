@@ -55,10 +55,10 @@ stemmer = SnowballStemmer("english")
 # 
 # =============================================================================
 
-all_h1=soup.find_all('h2')
+all_h2=soup.find_all('h2')
 
 d_ms={}
-for item in all_h1:
+for item in all_h2:
     first=item
     second=first.find_next('h2')
     temp=""
@@ -67,9 +67,9 @@ for item in all_h1:
         if str(first.findNext().text) != "":
             temp+= str(first.findNext().text)+" "
         first=first.findNext()
-    if temp!=" Please see “Therapy Services” later in this section. " and temp!=' See “Therapy Services” later in this section. ' and temp!="":
-        temp=temp.replace('.'," . ")
-        d_ms[str(item.text)]=temp
+    #if temp!=" Please see “Therapy Services” later in this section. " and temp!=' See “Therapy Services” later in this section. ' and temp!="":
+    temp=temp.replace('.'," . ")
+    d_ms[str(item.text)]=temp
 
 #for item,value in d_ms.items():
  #   print(item,"\n",value,'-----------------','\n')    
@@ -113,13 +113,13 @@ new_bag=list(set(new_bag))
     
     
 #user_input=input("please enter your query:\n")
-user_input="wheelchair"
+user_input="i want to know flu shot benefits"
 sents = sent_tokenize(user_input)
 word_sent = word_tokenize(user_input.lower())
 _stopwords = set(stopwords.words('english') + list(punctuation))
 user_input_words=[word for word in word_sent if word not in _stopwords]
 user_input_words=[stemmer.stem(i) for i in user_input_words]
-user_input_words=[i for i in user_input_words if i in new_bag]
+user_input_words=[i for i in user_input_words if (i in new_bag and i not in ('want','know','cover'))]
 
 key_section={}
 for i in user_input_words:
@@ -162,10 +162,11 @@ for i in final_cmn_section:
             
         elif i in tr.text:
             section_tr=tr
-            print("\n\n---",section_tr)
+            print("\n\n------\n\n",section_tr)
             
             
-    
+            
+            
 ####$sjdnaskdsad''
     
 # =============================================================================
