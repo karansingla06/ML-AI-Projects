@@ -1,0 +1,255 @@
+def get_user_input(name):
+    return request.form['name']
+
+
+def tokenize_user_input(user_input,new_bag):
+#    sents = sent_tokenize(user_input)
+    word_sent = word_tokenize(user_input.lower())
+    _stopwords = set(stopwords.words('english') + list(punctuation))
+    user_input_words=[word for word in word_sent if word not in _stopwords]
+    user_input_words=[stemmer.stem(i) for i in user_input_words]
+    user_input_words=[i for i in user_input_words if (i in new_bag and i not in ('health','claim','want','know','cover','elig','insur','plan'))]
+    return user_input_words
+
+def key_section(user_input_words,d_stem):
+    key_section={}
+    for i in user_input_words:
+        temp=[]
+        for key,val in d_stem.items():
+             if i in val:
+                 temp.append(key)
+        key_section[i]=set(temp)
+    return key_section
+
+def get_dh1(soup):
+    d_h1={}
+    all_h1=soup.find_all('h1')
+    for h1 in all_h1:
+        first=h1
+        second=first.find_next('h1')
+        temp=""
+    
+        while first.findNext()!=second:
+            if str(first.findNext().text) != "":
+                temp+= str(first.findNext())+" "
+            first=first.findNext()
+        #if temp!=" Please see “Therapy Services” later in this section. " and temp!=' See “Therapy Services” later in this section. ' and temp!="":
+        temp=temp.replace('.'," . ")
+        temp=temp.replace('('," ( ")
+        temp=temp.replace(')'," ) ")
+        temp=temp.replace('<'," <")
+        temp=temp.replace('>',"> ")
+        d_h1[str(h1.text)]=temp
+    d_h1.pop('Section 4. Table of Contents')
+    return d_h1
+
+def get_dh2(d_h1):
+    d_h2={}
+    for h1,h1_val in d_h1.items():
+        d_unio={}
+        soup2 = BeautifulSoup(h1_val,'html.parser')
+        all_h2=soup2.find_all('h2')
+        if len(all_h2)!=0 :
+            for h2 in all_h2:
+                first=h2
+                second=first.find_next('h2')
+                temp=""
+            
+                while first.findNext()!=second:
+                    if str(first.findNext().text) != "":
+                        temp+= str(first.findNext())+" "
+                    first=first.findNext()
+                #if temp!=" Please see “Therapy Services” later in this section. " and temp!=' See “Therapy Services” later in this section. ' and temp!="":
+                temp=temp.replace('.'," . ")
+                d_unio[h2.text]=temp
+            d_h2[str(h1)]=d_unio
+        else:
+            d_h2[str(h1)]={str(h1):h1_val}
+    return d_h2
+
+
+
+def get_h3(d_h2):
+    d_h3={}
+    for h1,h2_val in d_h2.items():
+        d_unio={}
+        for h2,h2_data in h2_val.items():
+            soup2 = BeautifulSoup(h2_data,'html.parser')
+            all_h3=soup2.find_all('h3')
+            if len(all_h3)!=0 :
+                for h3 in all_h3:
+                    first=h3
+                    second=first.find_next('h3')
+                    temp=""
+            
+                    while first.findNext()!=second:
+                        if str(first.findNext().text) != "":
+                            temp+= str(first.findNext())+" "
+                            first=first.findNext()
+                #if temp!=" Please see “Therapy Services” later in this section. " and temp!=' See “Therapy Services” later in this section. ' and temp!="":
+                    temp=temp.replace('.'," . ")
+                    d_unio[h3.text]=temp
+                d_h3[str(h2)]=d_unio
+            else:
+                d_h3[str(h2)]={str(h2):h2_data}
+    return d_h3
+
+
+
+
+
+
+def get_kwds(d_h2):
+    d_kwds={}
+    for key,val in d_h2.items():
+#    print(val,"\n\n\n")
+        for key2,val2 in val.items():
+    #        print("dsadad\n",key2)
+            if val2 is not None:
+#                sents = sent_tokenize(val2)
+                word_sent = word_tokenize(val2.lower())
+                _stopwords = set(stopwords.words('english') + list(punctuation)+['·',
+          '’',
+          '“',
+          '”'])
+                section_words=[word for word in word_sent if word not in _stopwords]
+                d_kwds[key2]=list(word for word in set(section_words) if (word.isalpha() and len(word)>2 and len(set(word))!=1))
+    return d_kwds
+
+
+def get_stem(d_kwds):
+    d_stem={}
+    for key,val in d_kwds.items():
+        singles = [stemmer.stem(i) for i in val]
+        temp=set(singles)
+        d_stem[key]=list(temp)
+    return d_stem
+
+def get_bag_of_words(d_stem):
+    bag_of_words2=[]
+    for i,j in d_stem.items():
+        bag_of_words2.append(j)
+    new_bag=[]
+    for list_word in bag_of_words2:
+        for i in list_word:
+            if i.isalpha():
+                new_bag.append(i) 
+    new_bag=list(set(new_bag))
+    return new_bag
+
+
+def find_parent_data(lis,kwds):
+#    print(kwds,lis)
+    res=""
+    res2=""
+    for i in lis:
+        res+="<h3>"+i+"</h3>"
+        res2+="<h3>"+i+"</h3>"
+        for key,val in d_h2.items():
+            for key2,val2 in val.items():
+                if i==key2:
+#                    print("---------",key2)
+#                    print("---",key2)
+                    soup4= BeautifulSoup(val2,'html.parser')
+                    ps=soup4.find_all('p')
+                    for p1 in ps:
+#                        print(p1)
+                        checklist=str(p1).lower().split()
+                        checklist=[stemmer.stem(y) for y in checklist]
+#                        print(checklist)
+#                        print(p1)
+                        if all(x in checklist for x in kwds):
+#                            print(p1,"\n")
+                            res+=p1.prettify()
+                            res2+=p1.prettify()
+#                            print("iiffififif")
+#                
+                    #    else:
+                     #       if any(x in checklist for x in kwds):
+                      #          res+=p1.prettify()
+       
+       # res+="<a id='more_info' onclick='show_full_info()'>Click here for more info</a><br>"
+#        res+="<script>function show_full_info(){alert();}</script>"
+                        
+    return res
+
+def final_output_data(key_section,user_input_words):
+    final_cmn_section=[]
+    final_output=""
+    if len(key_section.keys())!=0:    
+            final_cmn_section= list(set.intersection(*map(set,key_section.values())))
+#            print("Parents are-- \n",final_cmn_section)
+            final_output+=find_parent_data(final_cmn_section,user_input_words)   
+        
+            
+            soupTable= BeautifulSoup(html,'html.parser')
+            
+            trows = soupTable.find_all('tr')
+            
+            if len(final_cmn_section)==0:
+                final_output+="our customer representative will contact you shortly"
+                
+            else:
+                for i in final_cmn_section:
+                    temp=i.split()
+                    if len(temp)>=3:
+                        temp=" ".join(temp[0:3])
+                    else:
+                        temp=i
+                    
+                    for tr in trows:
+                        
+                        if "See" in tr.text and temp.strip() in tr.text:
+                            continue
+                            
+                        elif temp.strip() in tr.text and ("Coinsurance" in tr.text or "Copayment" in tr.text):
+                            final_output+="<br><h4>"+"Coinsurance/Copayment details of : "+i.strip()+"</h4>"
+                            section_tr=tr
+#                            print(section_tr.text)
+                            final_output+=section_tr.prettify()
+                            
+    else:
+        final_output+="our customer representative will contact you shortly"
+    
+    
+    return final_output
+    
+        
+
+
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from string import punctuation
+#import pandas as pd
+from nltk.stem.snowball import SnowballStemmer
+stemmer = SnowballStemmer("english")
+
+## run
+
+f = open(r"C:\Users\user\Desktop\POC-UI-master\Anthem_prototype_1\Anthem1.html","r")
+html=f.read()
+
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(html,'html.parser')
+
+
+d_h1=get_dh1(soup)
+d_h2=get_dh2(d_h1)
+kwds=get_kwds(d_h2)
+stem=get_stem(kwds)
+bog=get_bag_of_words(stem)
+
+
+d3=get_h3(d_h2)
+for i,j in d3.items():
+    print(i,"\n",j,"\n-----------")
+
+
+query="wheelchair benefits"
+words=tokenize_user_input(query,bog)
+
+
+
+key_section=key_section(words,stem)
+
+print(final_output_data(key_section,words))
