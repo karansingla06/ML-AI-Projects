@@ -1,2 +1,2 @@
-A chatbot to answer user queries based upon their healthcare insurance plans.
-Used RASA stack
+# A chatbot to answer user queries based upon their healthcare insurance plans
+# Used RASA stack for natural language understanding and nltk for nlp
