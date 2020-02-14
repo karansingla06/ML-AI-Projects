@@ -1,3 +1,7 @@
+# Projects done related to machine learning, natural language processing, computer vision etc.
+
+Image recognition using CNN with tensorflow.
+
 ChatBot POC project for healthcare domain using AI, ML concepts 
 
 Projects using Supervised and Unsupervised ml algos. 
