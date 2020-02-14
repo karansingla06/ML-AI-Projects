@@ -1,4 +1,4 @@
-# Projects done related to machine learning, natural language processing, computer vision etc.
+# Self Learning Projects done in Machine Learning, Natural Language Processing, Computer Vision
 
 Image recognition using CNN with tensorflow.
 
