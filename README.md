@@ -1,4 +1,5 @@
 # Self Learning Projects done in Machine Learning, Natural Language Processing, Computer Vision
+## This repository contains multiple self learning projects which I have completed over the years to learn and relearn about Machine Learning, Deep Learning, Computer vision, AI
 
 Image recognition using CNN with tensorflow.
 
